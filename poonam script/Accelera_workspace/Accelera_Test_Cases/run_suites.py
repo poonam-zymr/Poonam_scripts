@@ -46,3 +46,4 @@ def run_suite(resultdir):
         shutil.copytree(sourcedir, destidir, symlinks=False, ignore=shutil.ignore_patterns('*.py', '*.ini', '*.pyc', '*.coverage'))
     main_index.write_main_index(resultlocation)
     os.chdir(curdir)
+
