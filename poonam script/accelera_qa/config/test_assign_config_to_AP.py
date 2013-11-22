@@ -12,9 +12,9 @@ class TestPushConfigToAP(unittest.TestCase):
     #Shrushti - create a setup function to runworkers, apmanager and xmpp client for AP
     def setUp(self):
         pass
-       # utils.start_runworkers()
-       # utils.start_apmanager()
-       # utils.real_ap_registration(properties.real_ap)
+        utils.start_runworkers()
+        utils.start_apmanager()
+        utils.real_ap_registration(properties.real_ap)
     def test_assign_config_to_ap(self):
         ap_jid = properties.apjid
         ap_serial_number = db.search_ap_in_new_ap_collection(ap_jid)
