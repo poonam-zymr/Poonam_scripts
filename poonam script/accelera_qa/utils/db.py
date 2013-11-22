@@ -28,34 +28,35 @@ def verify_customer_default_id(config_id, customer_id):
 def search_ap_in_new_ap_collection(ap_jid):
     # mongo_ap_collection = db.retrieve_collection(properties.ap_collection_name)
     mongo_newap_collection = retrieve_collection(properties.new_ap_collection_name)
-    mongo_newap_document = mongo_newap_collection.find_one({"apid" : ap_jid},{"_id" : 1})
-    ap_id = str(mongo_newap_document['_id'])
+    mongo_newap_document = mongo_newap_collection.find_one({"apid" : ap_jid},{"serial_number" : 1})
+    ap_serial_number = str(mongo_newap_document['serial_number'])
+    #print ap_serial_number
     if mongo_newap_document != None:
         print ("AP %s is registered successfully and added in new_ap collection." % ap_jid)
     else:
         raise AssertionError("AP %s is not added in new_ap collection." % ap_jid) 
-    return ap_id
+    return ap_serial_number
 
 #This function checks whether AP gets added in ap collection after onboadring
 def search_ap_in_ap_collection(ap_jid):
     mongo_ap_collection=retrieve_collection(properties.ap_collection_name)
     mongo_ap_document = mongo_ap_collection.find_one({"apid" : ap_jid},{"ap_name" : 1})
     ap_name = str(mongo_ap_document['ap_name'])
+    ap_id = str(mongo_ap_document['_id'])
     if ap_name == properties.apjid:
         print ("AP %s is found in ap collection." % ap_jid)
     else:
         raise AssertionError("AP %s is not found in ap collection." % ap_jid)
+    return ap_id
 
 def verify_ap_running_config_id(ap_jid, config_id):
     mongo_ap_collection = retrieve_collection(properties.ap_collection_name)
     mongo_ap_document = mongo_ap_collection.find_one({"apid" : ap_jid})
     running_config_id = str(mongo_ap_document['running_config_id'])
     if running_config_id == str(config_id):
-        print ("Config %s is pushed to AP %s successfully." % (config_id,ap_jid))
+        print ("Config %s is pushed to AP %s successfully." % (properties.configuration_name, ap_jid))
     else:
-        raise AssertionError("Config %s is not pushed to AP %s." % (config_id,ap_jid))
-    
-
+        raise AssertionError("Config %s is not pushed to AP %s." % (properties.configuration_name, ap_jid))
     
     
     

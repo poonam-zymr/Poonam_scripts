@@ -8,10 +8,7 @@ from apis import config_api,common_api
 
 def get_config_list(cookies):
     configrequest = properties.web_ui_baseurl + (config_api.config_list_api % properties.customer_id)
-    print configrequest
     config_response = requests.get(configrequest,cookies=cookies)
-    print config_response.text
-    #js = config_response.text
     js = json.loads(config_response.text)
     return js
 
@@ -51,13 +48,13 @@ def create_config_blob(config_name):
 def retrieve_config_id(config_name):
     login_cookie = utils.login()
     js3 = get_config_list(login_cookie)
+    config_id=None
     for i in range(len(js3['results'])):    
         ourResult = js3['results'][i]['config_name']
-        if config_name in ourResult:
+        if config_name == ourResult:
             config_id = js3['results'][i]['id']
-        else:
-            raise AssertionError("Configuration blob %s is not exist" % config_name)
-            config_id=None
+    if config_id == None:
+        raise AssertionError("Configuration blob %s is not exist" % config_name)
     return config_id
 
 #This function pushes config to customer
@@ -86,29 +83,21 @@ def push_config_to_customer():
                     else:
                         raise AssertionError("Default config %s is not applied to customer %s." % (properties.configuration_name, properties.customer_name))
 
-def push_config_to_ap():
+def push_config_to_ap(ap_id, ap_jid):
     login_cookie = utils.login()
     #SHrushti - Use these asserts in the login function-done
     #Shrushti - Rename variable ap_name to ap_jid in the function-done
-    ap_jid = properties.apjid
-    ap_id = db.search_ap_in_ap_collection(ap_jid)
-    js = get_config_list(login_cookie)
-    for i in range(len(js['results'])):    
-        ourResult = js['results'][i]['config_name']
-        if properties.configuration_name in ourResult:
-            config_id = js['results'][i]['id']
-            print config_id
-            push_config_request = properties.web_ui_baseurl + (config_api.push_config_to_AP_api % (ap_id,config_id))
-            push_config_response = requests.get(push_config_request, cookies=login_cookie)
-            js3 = json.loads(push_config_response.text)
-            print js3
-            if "Default Configuration of AP updated." in js3['results']['message']:
+    config_id = retrieve_config_id(properties.configuration_name)
+    if config_id != None:
+        push_config_request = properties.web_ui_baseurl + (config_api.push_config_to_AP_api % (ap_id, config_id, properties.customer_id))
+        push_config_response = requests.get(push_config_request, cookies=login_cookie)
+        js3 = json.loads(push_config_response.text)
+        if "Configuration template change initiated" in js3['results']['message']:
                 #Shrushti - Use variable names in print statements-done
-                print ("Default config %s is applied to AP %s successfully." % properties.configuration_name,ap_jid)
-            else:
-                raise AssertionError("Default config %s is not applied to AP %s." % (properties.configuration_name,ap_jid))
+                print ("Default config %s is applied to AP %s successfully." % (properties.configuration_name,ap_jid))
+        else:
+            raise AssertionError("Default config %s is not applied to AP %s." % (properties.configuration_name,ap_jid))
     return config_id
                 #Shrushti - Add assertion error as above function-done
                 #This block checks whether config_id field points to correct config blob in database.-done
                 #Shrushti - Create a new function to verify pushed config in db-done
-                

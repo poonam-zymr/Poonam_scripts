@@ -6,14 +6,14 @@ configuration_name = 'Default'
 
 customer_collection_name = 'customer'
 
-username = "dhara@acceleramb.com"
+username = "admin@acceleramb.com"
 
 password = "welcome"
 
-customer_id = "526e2d0b1c2d2670447b23c7"
+customer_id = "528e09a860f76f6a9fe5a70f"
 
 #location_id = "524bc964f9771b1c8f02359c"
-location_id = "526e3a481c2d26e80a7b23c6"
+location_id = "528e09a860f76f6a9fe5a710"
 
 web_ui_baseurl = "http://shrushti-vm-test"
 #web_ui_baseurl = "http://192.168.2.39/accelera_poonam/index.php"
@@ -26,7 +26,7 @@ inputUserInfoFileLocation = '/home/accelera/cm-qa/results/input-user.csv'
 
 outputFileLocation = '/home/accelera/cm-qa/results'
 
-apmanager = "apmanager-sk-1"
+apmanager = "apmanager-sk-2"
 
 cm_path = '/home/accelera/work/cm/'
 
@@ -38,8 +38,9 @@ apagent_path = '/home/accelera/work/cm/tests/ap_agent/'
 
 xmpp_client_path = '/opt/accelera/bin'
 
-apjid = '04-94-fc-88-c0-c9'
+#apjid = '04-94-fc-88-c0-c9'
 #apjid = "28-c6-8e-29-34-81"
+apjid = "28-c6-8e-29-34-41"
 
 mongo_ip = "10.2.1.222"
 
@@ -47,7 +48,7 @@ real_ap = '10.10.10.61'
 
 #mongo_ip="mongo.sc.acceleramb.com"
 
-db_to_be_used = 'shrushti-test-1'
+db_to_be_used = 'shrushti-vm-test'
 
 ap_collection_name = 'ap'
 

@@ -96,8 +96,8 @@ def real_ap_registration(real_ap):
     channel.exec_command(command + ' > /dev/null 2>&1 &')
     time.sleep(180)
     
-def ap_onboarding(ap_id, ap_jid):
-    onboard_request = properties.web_ui_baseurl + (common_api.onboarding_api % (properties.customer_id, properties.location_id, ap_id, ap_jid))
+def ap_onboarding(ap_jid, ap_serial_number):
+    onboard_request = properties.web_ui_baseurl + (common_api.onboarding_api % (properties.customer_id, properties.location_id, ap_jid, ap_serial_number))
     login_cookie = login()
     onboard_response = requests.get(onboard_request, cookies=login_cookie)
     js = json.loads(onboard_response.text)
