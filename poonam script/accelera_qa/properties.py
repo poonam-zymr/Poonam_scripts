@@ -26,7 +26,7 @@ inputUserInfoFileLocation = '/home/accelera/cm-qa/results/input-user.csv'
 
 outputFileLocation = '/home/accelera/cm-qa/results'
 
-apmanager = "apmanager-sk-2"
+apmanager = "apmanager-sk-1"
 
 cm_path = '/home/accelera/work/cm/'
 
