@@ -44,7 +44,8 @@ apjid = "28-c6-8e-29-34-41"
 
 mongo_ip = "10.2.1.222"
 
-real_ap = '10.10.10.61'
+#real_ap = '10.10.10.59'
+real_ap = 'ap-cloud-wndap360'
 
 #mongo_ip="mongo.sc.acceleramb.com"
 

@@ -4,6 +4,8 @@ import properties
 import os
 import time
 import subprocess
+import paramiko
+import db
 from apis import config_api,common_api
 #import paramiko
 
@@ -80,21 +82,27 @@ def real_ap_registration(real_ap):
     
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(real_ap, username='root', password='password')
-    transport = ssh.get_transport()
-    channel = transport.open_session()
+    ssh.connect(properties.real_ap, username='root', password='password')
     apmanager_path = ("%s%s" % (properties.apmanager,
                                     properties.xmppdomain))
+    print "Rebooting AP."
+    reboot_command = "reboot"
+    ssh.exec_command(reboot_command)
+    time.sleep(180)
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(properties.real_ap, username='root', password='password')
     services_stop = "monit stop xmpp_client"
-    print "Stopping services!"
     xmpp_client_filepath = os.path.join(properties.xmpp_client_path,
                                             "xmpp_client.conf")
     run_xmpp_client = "monit start xmpp_client"
     print ("Registering AP %s with apmanager %s" % (properties.real_ap, properties.apmanager))
-    command = ('cd %s; %s; export XMPP_REGISTER="%s"; source %s; %s' % (properties.xmpp_client_path,
-                   services_stop,apmanager_path, xmpp_client_filepath, run_xmpp_client))
-    channel.exec_command(command + ' > /dev/null 2>&1 &')
-    time.sleep(180)
+    command = ("cd %s;%s;sed -i 's/XMPP_REGISTER=.*/XMPP_REGISTER='%s'/g' %s;%s" % (properties.xmpp_client_path, 
+                    services_stop, apmanager_path, xmpp_client_filepath, run_xmpp_client))
+    ssh.exec_command(command + ' > /dev/null 2>&1 &')
+    time.sleep(60)
+        # Verify if the ap entry is made in the database
+    db.search_ap_in_new_ap_collection(properties.apjid)
     
 def ap_onboarding(ap_jid, ap_serial_number):
     onboard_request = properties.web_ui_baseurl + (common_api.onboarding_api % (properties.customer_id, properties.location_id, ap_jid, ap_serial_number))
